@@ -57,14 +57,14 @@ export default function TabLayout() {
 
 const styles = StyleSheet.create({
     iconContainer: {
-        alignItems: "center" as ViewStyle["alignItems"],  // ✅ TypeScript-friendly fix
-        justifyContent: "center" as ViewStyle["justifyContent"],  // ✅ Ensures compatibility
+        alignItems: "center" as ViewStyle["alignItems"],
+        justifyContent: "center" as ViewStyle["justifyContent"],
     },
     label: {
         fontSize: 10,
         textAlign: "center",
         color: "black",
-        minWidth: 70, // ✅ Ensures same width for all labels
-        flexWrap: "nowrap" as TextStyle["flexWrap"], // ✅ Prevents text wrapping
+        minWidth: 70,
+        flexWrap: "nowrap" as TextStyle["flexWrap"]
     },
 });
