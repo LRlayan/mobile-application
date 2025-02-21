@@ -3,11 +3,12 @@ import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Text, TextInput, Card } from "react-native-paper";
 import { useRouter } from "expo-router";
 
-export default function SignIn() {
+export default function AuthScreen() {
     const router = useRouter();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [isSignIn, setIsSignIn] = useState(true);
     const [error, setError] = useState("");
 
     const handleLogin = () => {
@@ -27,7 +28,7 @@ export default function SignIn() {
         <View style={styles.container}>
             <Card style={styles.card}>
                 <Card.Content>
-                    <Text style={styles.title}>Sign In</Text>
+                    <Text style={styles.title}>{isSignIn ? "Sign In" : "Sign Up"}</Text>
 
                     {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
@@ -54,16 +55,32 @@ export default function SignIn() {
                         style={styles.input}
                     />
 
+                    {!isSignIn && (
+                        <TextInput
+                            label="Confirm Password"
+                            mode="outlined"
+                            secureTextEntry={!showPassword}
+                            style={styles.input}
+                        />
+                    )}
+
                     <Button mode="contained" onPress={handleLogin} style={styles.button}>
-                        Login
+                        {isSignIn ? "Login" : "Sign Up"}
                     </Button>
 
-                    <TouchableOpacity onPress={() => alert("Forgot Password clicked!")}>
-                        <Text style={styles.forgotText}>Forgot Password?</Text>
-                    </TouchableOpacity>
+                    {isSignIn && (
+                        <TouchableOpacity onPress={() => alert("Forgot Password clicked!")}>
+                            <Text style={styles.forgotText}>Forgot Password?</Text>
+                        </TouchableOpacity>
+                    )}
 
-                    <TouchableOpacity onPress={() => router.push("/signup")}>
-                        <Text style={styles.signupText}>Don't have an account? <Text style={styles.signupLink}>Sign Up</Text></Text>
+                    <TouchableOpacity onPress={() => setIsSignIn(!isSignIn)}>
+                        <Text style={styles.signupText}>
+                            {isSignIn ? "Don't have an account? " : "Already have an account? "}
+                            <Text style={styles.signupLink}>
+                                {isSignIn ? "Sign Up" : "Sign In"}
+                            </Text>
+                        </Text>
                     </TouchableOpacity>
                 </Card.Content>
             </Card>
