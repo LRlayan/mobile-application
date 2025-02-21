@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 export default function Tab() {
     return (
         <View style={styles.container}>
-            <Text>Tab [Home|Settings]</Text>
+            <Text style={styles.title}>Countdown</Text>
         </View>
     );
 }
@@ -11,7 +11,11 @@ export default function Tab() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        padding: 20
     },
+    title: {
+        fontSize: 35,
+        color: 'purple',
+        fontWeight: "bold"
+    }
 });
