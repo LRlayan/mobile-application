@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import { AnimatedFAB, Searchbar, TextInput, Switch  } from "react-native-paper";
-import { DatePickerModal } from "react-native-paper-dates";
+import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
 
 export default function Tab() {
@@ -9,8 +9,14 @@ export default function Tab() {
     const [text, setText] = React.useState("");
     const [date, setDate] = useState<Date | undefined>(undefined);
     const [open, setOpen] = useState(false);
+    const [timeOpen, setTimeOpen] = useState(false);
+    const [time, setTime] = useState<{ hours: number; minutes: number } | undefined>(undefined);
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+
+    const formatTime = (hours: number, minutes: number) => {
+        return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    };
 
     return (
         <View style={styles.container}>
@@ -101,9 +107,18 @@ export default function Tab() {
                             />
 
                             <TextInput
-                                value={"00:00"}
+                                value={time ? formatTime(time.hours, time.minutes) : "Select Time"}
                                 style={styles.textInput}
-                                onChangeText={text => setText(text)}
+                                onFocus={() => setTimeOpen(true)}
+                                right={<TextInput.Icon icon="clock" onPress={() => setTimeOpen(true)} />}
+                            />
+                            <TimePickerModal
+                                visible={timeOpen}
+                                onDismiss={() => setTimeOpen(false)}
+                                onConfirm={(params) => {
+                                    setTimeOpen(false);
+                                    setTime(params);
+                                }}
                             />
 
                             <Text style={styles.label}>REPEAT</Text>
