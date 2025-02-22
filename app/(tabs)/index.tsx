@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { AnimatedFAB, Searchbar, TextInput, Switch, Divider } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
-import {View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, Keyboard} from "react-native";
+import {View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 
 export default function Tab() {
     const [searchQuery, setSearchQuery] = React.useState('');
@@ -64,116 +64,139 @@ export default function Tab() {
                         </View>
 
                         {/* Countdown Content Here */}
-                        <View style={styles.countdownContent}>
-                            <Text style={styles.label}>TITLE</Text>
-                            <TextInput
-                                value={text}
-                                style={styles.textInput}
-                                onChangeText={text => setText(text)}
-                            />
-
-                            <Text style={styles.label}>DATE AND TIME</Text>
-                            <View style={styles.switchContainer}>
+                        <KeyboardAvoidingView
+                            behavior={Platform.OS === "ios" ? "padding" : "height"}
+                            style={{ flex: 1 }}
+                        >
+                            <ScrollView
+                                contentContainerStyle={{ flexGrow: 1 }}
+                                keyboardShouldPersistTaps="handled"
+                            >
+                            <View style={styles.countdownContent}>
+                                <Text style={styles.label}>TITLE</Text>
                                 <TextInput
-                                    value={"All Day"}
-                                    style={[styles.textInput, { flex: 1 }]}
-                                    editable={false}
-                                    right={
-                                        <TextInput.Icon
-                                            style={styles.switch}
-                                            icon={() => (
-                                                <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
-                                            )}
+                                    value={text}
+                                    style={styles.textInput}
+                                    onChangeText={text => setText(text)}
+                                />
+
+                                <Text style={styles.label}>DATE AND TIME</Text>
+                                <View style={styles.switchContainer}>
+                                    <TextInput
+                                        value={"All Day"}
+                                        style={[styles.textInput, { flex: 1 }]}
+                                        editable={false}
+                                        right={
+                                            <TextInput.Icon
+                                                style={styles.switch}
+                                                icon={() => (
+                                                    <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
+                                                )}
+                                            />
+                                        }
+                                    />
+                                </View>
+
+                                <TextInput
+                                    value={date ? date.toDateString() : new Date().toDateString()}
+                                    style={styles.textInput}
+                                    onFocus={() => {
+                                        if (!date) setDate(new Date());
+                                        setOpen(true);
+                                    }}
+                                    right={<TextInput.Icon icon="calendar" onPress={() => setOpen(true)} />}
+                                />
+                                <DatePickerModal
+                                    locale="en"
+                                    mode="single"
+                                    visible={open}
+                                    onDismiss={() => setOpen(false)}
+                                    date={date || new Date()} // Default to current date
+                                    onConfirm={(params: any) => {
+                                        setOpen(false);
+                                        setDate(params.date);
+                                    }}
+                                />
+
+                                {!isSwitchOn && (
+                                    <>
+                                        <TextInput
+                                            value={time ? formatTime(time.hours, time.minutes) : "Select Time"}
+                                            style={styles.textInput}
+                                            onFocus={() => setTimeOpen(true)}
+                                            right={<TextInput.Icon icon="clock" onPress={() => setTimeOpen(true)} />}
                                         />
-                                    }
+                                        <TimePickerModal
+                                            visible={timeOpen}
+                                            onDismiss={() => setTimeOpen(false)}
+                                            onConfirm={(params) => {
+                                                setTimeOpen(false);
+                                                setTime(params);
+                                            }}
+                                        />
+                                    </>
+                                )}
+
+                                <View>
+                                    <Text style={styles.label}>REPEAT</Text>
+
+                                    <TouchableOpacity
+                                        onPress={() => setDropdownVisible(!isDropdownVisible)}
+                                        activeOpacity={0.7}
+                                        style={{ zIndex: 1 }}
+                                    >
+                                        <TextInput
+                                            value={repeatText}
+                                            style={styles.textInput}
+                                            editable={false}
+                                            right={<TextInput.Icon icon="chevron-down" />}
+                                            onPressIn={() => setDropdownVisible(true)}
+                                        />
+                                    </TouchableOpacity>
+
+                                    {isDropdownVisible && (
+                                        <Modal
+                                            transparent={true}
+                                            animationType="fade"
+                                            visible={isDropdownVisible}
+                                            onRequestClose={() => setDropdownVisible(false)}
+                                        >
+                                            <TouchableOpacity
+                                                style={styles.modalOverlay}
+                                                activeOpacity={1}
+                                                onPress={() => setDropdownVisible(false)}
+                                            >
+                                                <View style={styles.dropdownContainer}>
+                                                    <FlatList
+                                                        data={repeatOptions}
+                                                        keyExtractor={(item) => item}
+                                                        renderItem={({ item }) => (
+                                                            <TouchableOpacity
+                                                                style={styles.optionItem}
+                                                                onPress={() => {
+                                                                    setRepeatText(item);
+                                                                    setDropdownVisible(false);
+                                                                }}
+                                                            >
+                                                                <Text style={styles.optionText}>{item}</Text>
+                                                            </TouchableOpacity>
+                                                        )}
+                                                    />
+                                                </View>
+                                            </TouchableOpacity>
+                                        </Modal>
+                                    )}
+                                </View>
+
+                                <Text style={styles.label}>NOTES</Text>
+                                <TextInput
+                                    value={text}
+                                    style={styles.textInput}
+                                    onChangeText={text => setText(text)}
                                 />
                             </View>
-
-                            <TextInput
-                                value={date ? date.toDateString() : new Date().toDateString()}
-                                style={styles.textInput}
-                                onFocus={() => {
-                                    if (!date) setDate(new Date());
-                                    setOpen(true);
-                                }}
-                                right={<TextInput.Icon icon="calendar" onPress={() => setOpen(true)} />}
-                            />
-                            <DatePickerModal
-                                locale="en"
-                                mode="single"
-                                visible={open}
-                                onDismiss={() => setOpen(false)}
-                                date={date || new Date()} // Default to current date
-                                onConfirm={(params: any) => {
-                                    setOpen(false);
-                                    setDate(params.date);
-                                }}
-                            />
-
-                            {!isSwitchOn && (
-                                <>
-                                    <TextInput
-                                        value={time ? formatTime(time.hours, time.minutes) : "Select Time"}
-                                        style={styles.textInput}
-                                        onFocus={() => setTimeOpen(true)}
-                                        right={<TextInput.Icon icon="clock" onPress={() => setTimeOpen(true)} />}
-                                    />
-                                    <TimePickerModal
-                                        visible={timeOpen}
-                                        onDismiss={() => setTimeOpen(false)}
-                                        onConfirm={(params) => {
-                                            setTimeOpen(false);
-                                            setTime(params);
-                                        }}
-                                    />
-                                </>
-                            )}
-
-                            <View>
-                                <Text style={styles.label}>REPEAT</Text>
-
-                                <TouchableOpacity
-                                    onPress={() => setDropdownVisible(!isDropdownVisible)}
-                                    activeOpacity={0.7}
-                                    style={{ zIndex: 1 }}
-                                >
-                                    <TextInput
-                                        value={repeatText}
-                                        style={styles.textInput}
-                                        editable={false}
-                                        right={<TextInput.Icon icon="chevron-down" />}
-                                        onPressIn={() => setDropdownVisible(true)} // Open dropdown when tapping the TextInput
-                                    />
-                                </TouchableOpacity>
-
-                                {isDropdownVisible && (
-                                    <View style={styles.dropdownContainer}>
-                                        <FlatList
-                                            data={repeatOptions}
-                                            keyExtractor={(item) => item}
-                                            renderItem={({ item }) => (
-                                                <TouchableOpacity
-                                                    style={styles.optionItem}
-                                                    onPress={() => {
-                                                        setRepeatText(item);
-                                                        setDropdownVisible(false);
-                                                    }}
-                                                >
-                                                    <Text style={styles.optionText}>{item}</Text>
-                                                </TouchableOpacity>
-                                            )}
-                                        />
-                                    </View>
-                                )}
-                            </View>
-
-                            <Text style={styles.label}>NOTES</Text>
-                            <TextInput
-                                value={text}
-                                style={styles.textInput}
-                                onChangeText={text => setText(text)}
-                            />
-                        </View>
+                            </ScrollView>
+                        </KeyboardAvoidingView>
                     </View>
                 </View>
             </Modal>
@@ -204,6 +227,8 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     modalContent: {
+        flex: 1,
+        maxHeight: "95%",
         backgroundColor: "white",
         padding: 20,
         borderTopLeftRadius: 20,
@@ -277,18 +302,16 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     dropdownContainer: {
-        position: 'absolute',
-        top: 50, // Adjust according to your design
-        left: 0,
-        right: 0,
-        backgroundColor: 'white',
+        width: "80%",
+        backgroundColor: "white",
         borderRadius: 5,
-        elevation: 5, // Android shadow
-        shadowColor: '#000', // iOS shadow
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-        zIndex: 999, // Ensure it's above other elements
-    }
-
+        padding: 10,
+        elevation: 5,
+    },
+    modalOverlay: {
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
