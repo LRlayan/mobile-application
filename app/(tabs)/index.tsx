@@ -1,11 +1,14 @@
 import React, {useState} from "react";
-import { AnimatedFAB, Searchbar, TextInput  } from "react-native-paper";
+import { AnimatedFAB, Searchbar, TextInput } from "react-native-paper";
+import { DatePickerModal } from "react-native-paper-dates";
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
 
 export default function Tab() {
     const [searchQuery, setSearchQuery] = React.useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [text, setText] = React.useState("");
+    const [date, setDate] = useState<Date | undefined>(undefined);
+    const [open, setOpen] = useState(false);
 
     return (
         <View style={styles.container}>
@@ -52,7 +55,6 @@ export default function Tab() {
                         <View style={styles.countdownContent}>
                             <Text style={styles.label}>TITLE</Text>
                             <TextInput
-                                label="Title"
                                 value={text}
                                 style={styles.textInput}
                                 onChangeText={text => setText(text)}
@@ -60,19 +62,34 @@ export default function Tab() {
 
                             <Text style={styles.label}>DATE AND TIME</Text>
                             <TextInput
-                                label="All Days"
                                 value={text}
                                 style={styles.textInput}
                                 onChangeText={text => setText(text)}
                             />
                             <TextInput
-                                label="Date"
-                                value={text}
+                                value={date ? date.toDateString() : new Date().toDateString()}
                                 style={styles.textInput}
-                                onChangeText={text => setText(text)}
+                                onFocus={() => {
+                                    if (!date) setDate(new Date());
+                                    setOpen(true);
+                                }}
+                                right={<TextInput.Icon icon="calendar" onPress={() => setOpen(true)} />}
                             />
+
+                            <DatePickerModal
+                                locale="en"
+                                mode="single"
+                                visible={open}
+                                onDismiss={() => setOpen(false)}
+                                date={date || new Date()} // Default to current date
+                                onConfirm={(params: any) => {
+                                    setOpen(false);
+                                    setDate(params.date);
+                                }}
+                            />
+
+
                             <TextInput
-                                label="Time"
                                 value={text}
                                 style={styles.textInput}
                                 onChangeText={text => setText(text)}
@@ -80,7 +97,6 @@ export default function Tab() {
 
                             <Text style={styles.label}>REPEAT</Text>
                             <TextInput
-                                label="Reapeat"
                                 value={text}
                                 style={styles.textInput}
                                 onChangeText={text => setText(text)}
@@ -88,7 +104,6 @@ export default function Tab() {
 
                             <Text style={styles.label}>NOTES</Text>
                             <TextInput
-                                label="Notes"
                                 value={text}
                                 style={styles.textInput}
                                 onChangeText={text => setText(text)}
@@ -159,7 +174,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         width: 366,
-        height: 20,
+        height: 50,
         borderRadius: 10,
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
