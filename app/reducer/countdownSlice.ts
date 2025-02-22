@@ -5,12 +5,12 @@ const initialState: {countdowns: CountdownModel[]} = {
     countdowns: [],
 };
 
-export const CountdownRoots = {
+export type CountdownRootState = {
     countdown: {
         countdowns: Array<{
             title: string;
-            date: string;
-            time: string;
+            date: Date;
+            time: { hours: number; minutes: number } | undefined;
             repeat: string;
             color: string;
             notes: string;
