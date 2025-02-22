@@ -1,13 +1,17 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import { AnimatedFAB, Searchbar, TextInput, Switch, Divider } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import {View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
+import CountdownCard from "../component/card";
+import {AppDispatch} from "../store/store";
+import {useDispatch, useSelector} from "react-redux";
+import {CountdownModel} from "../model/countdown-model";
+import {addCard, CountdownRootState} from "../reducer/countdownSlice";
 
 export default function Tab() {
     const [searchQuery, setSearchQuery] = React.useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    const [text, setText] = React.useState("");
-    const [date, setDate] = useState<Date | undefined>(undefined);
+    const [date, setDate] = useState<Date>();
     const [open, setOpen] = useState(false);
     const [timeOpen, setTimeOpen] = useState(false);
     const [time, setTime] = useState<{ hours: number; minutes: number } | undefined>(undefined);
@@ -25,6 +29,25 @@ export default function Tab() {
         return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     };
 
+    const [title, setTitle] = React.useState("");
+    const [notes, setNotes] = React.useState("");
+    const dispatch = useDispatch<AppDispatch>();
+    const cards = useSelector((state: CountdownRootState) => state.countdown.countdowns) || [];
+    const [allCards, setAllCards] = useState<CountdownModel[]>(cards);
+
+
+    useEffect(() => {
+        setAllCards(cards);
+    }, [cards]);
+
+    const handleSubmit = () => {
+        if (!title || !date) return;
+        const configDate = date ? date.toDateString() : new Date().toDateString();
+        const newCountdown = new CountdownModel(title,new Date(configDate),time,repeatText,colorsInput,notes);
+        dispatch(addCard(newCountdown));
+        setModalVisible(false);
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Countdowns</Text>
@@ -34,6 +57,8 @@ export default function Tab() {
                 onChangeText={setSearchQuery}
                 value={searchQuery}
             />
+
+            <CountdownCard data={allCards}/>
 
             <AnimatedFAB
                 icon="plus"
@@ -61,7 +86,7 @@ export default function Tab() {
                                 <Text style={styles.cancelButton}>Cancel</Text>
                             </TouchableOpacity>
                             <Text style={styles.modalTitle}>Add Countdown</Text>
-                            <TouchableOpacity onPress={() => setModalVisible(false)}>
+                            <TouchableOpacity onPress={handleSubmit}>
                                 <Text style={styles.doneButton}>Done</Text>
                             </TouchableOpacity>
                         </View>
@@ -79,9 +104,9 @@ export default function Tab() {
                                     <View style={styles.countdownContent}>
                                         <Text style={styles.label}>TITLE</Text>
                                         <TextInput
-                                            value={text}
+                                            value={title}
                                             style={styles.textInput}
-                                            onChangeText={text => setText(text)}
+                                            onChangeText={text => setTitle(text)}
                                         />
 
                                         <Text style={styles.label}>DATE AND TIME</Text>
@@ -125,7 +150,7 @@ export default function Tab() {
                                         {!isSwitchOn && (
                                             <>
                                                 <TextInput
-                                                    value={time ? formatTime(time.hours, time.minutes) : "Select Time"}
+                                                    value={time ? formatTime(time.hours, time.minutes) : "00:00"}
                                                     style={styles.textInput}
                                                     onFocus={() => setTimeOpen(true)}
                                                     right={<TextInput.Icon icon="clock" onPress={() => setTimeOpen(true)} />}
@@ -244,9 +269,9 @@ export default function Tab() {
 
                                         <Text style={styles.label}>NOTES</Text>
                                         <TextInput
-                                            value={text}
+                                            value={notes}
                                             style={styles.textInput}
-                                            onChangeText={text => setText(text)}
+                                            onChangeText={text => setNotes(text)}
                                         />
                                     </View>
                                 </ScrollView>
@@ -326,6 +351,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 5,
     },
     label: {
+        textAlign: "center",
         fontSize: 15,
         color: 'gray',
         marginBottom: 5,
