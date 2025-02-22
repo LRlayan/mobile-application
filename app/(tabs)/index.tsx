@@ -106,20 +106,24 @@ export default function Tab() {
                                 }}
                             />
 
-                            <TextInput
-                                value={time ? formatTime(time.hours, time.minutes) : "Select Time"}
-                                style={styles.textInput}
-                                onFocus={() => setTimeOpen(true)}
-                                right={<TextInput.Icon icon="clock" onPress={() => setTimeOpen(true)} />}
-                            />
-                            <TimePickerModal
-                                visible={timeOpen}
-                                onDismiss={() => setTimeOpen(false)}
-                                onConfirm={(params) => {
-                                    setTimeOpen(false);
-                                    setTime(params);
-                                }}
-                            />
+                            {!isSwitchOn && (
+                                <>
+                                    <TextInput
+                                        value={time ? formatTime(time.hours, time.minutes) : "Select Time"}
+                                        style={styles.textInput}
+                                        onFocus={() => setTimeOpen(true)}
+                                        right={<TextInput.Icon icon="clock" onPress={() => setTimeOpen(true)} />}
+                                    />
+                                    <TimePickerModal
+                                        visible={timeOpen}
+                                        onDismiss={() => setTimeOpen(false)}
+                                        onConfirm={(params) => {
+                                            setTimeOpen(false);
+                                            setTime(params);
+                                        }}
+                                    />
+                                </>
+                            )}
 
                             <Text style={styles.label}>REPEAT</Text>
                             <TextInput
