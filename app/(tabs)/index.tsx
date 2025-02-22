@@ -1,7 +1,7 @@
 import React, {useState} from "react";
-import { AnimatedFAB, Searchbar, TextInput, Switch  } from "react-native-paper";
+import { AnimatedFAB, Searchbar, TextInput, Switch, Divider } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
-import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
+import {View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, Keyboard} from "react-native";
 
 export default function Tab() {
     const [searchQuery, setSearchQuery] = React.useState('');
@@ -12,7 +12,11 @@ export default function Tab() {
     const [timeOpen, setTimeOpen] = useState(false);
     const [time, setTime] = useState<{ hours: number; minutes: number } | undefined>(undefined);
     const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const [isDropdownVisible, setDropdownVisible] = useState(false);
+    const [repeatText, setRepeatText] = useState("Every Day");
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+
+    const repeatOptions = ["Every Day", "Every Week", "Every 2 Weeks", "Every Month", "Every Year"];
 
     const formatTime = (hours: number, minutes: number) => {
         return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
@@ -125,12 +129,43 @@ export default function Tab() {
                                 </>
                             )}
 
-                            <Text style={styles.label}>REPEAT</Text>
-                            <TextInput
-                                value={text}
-                                style={styles.textInput}
-                                onChangeText={text => setText(text)}
-                            />
+                            <View>
+                                <Text style={styles.label}>REPEAT</Text>
+
+                                <TouchableOpacity
+                                    onPress={() => setDropdownVisible(!isDropdownVisible)}
+                                    activeOpacity={0.7}
+                                    style={{ zIndex: 1 }}
+                                >
+                                    <TextInput
+                                        value={repeatText}
+                                        style={styles.textInput}
+                                        editable={false}
+                                        right={<TextInput.Icon icon="chevron-down" />}
+                                        onPressIn={() => setDropdownVisible(true)} // Open dropdown when tapping the TextInput
+                                    />
+                                </TouchableOpacity>
+
+                                {isDropdownVisible && (
+                                    <View style={styles.dropdownContainer}>
+                                        <FlatList
+                                            data={repeatOptions}
+                                            keyExtractor={(item) => item}
+                                            renderItem={({ item }) => (
+                                                <TouchableOpacity
+                                                    style={styles.optionItem}
+                                                    onPress={() => {
+                                                        setRepeatText(item);
+                                                        setDropdownVisible(false);
+                                                    }}
+                                                >
+                                                    <Text style={styles.optionText}>{item}</Text>
+                                                </TouchableOpacity>
+                                            )}
+                                        />
+                                    </View>
+                                )}
+                            </View>
 
                             <Text style={styles.label}>NOTES</Text>
                             <TextInput
@@ -223,5 +258,37 @@ const styles = StyleSheet.create({
     },
     switch: {
         width: "300%"
+    },
+    menuAnchor: {
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        backgroundColor: 'white',
+        alignSelf: 'flex-start'
+    },
+    optionItem: {
+        padding: 15,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
+    },
+    optionText: {
+        fontSize: 18,
+    },
+    dropdownContainer: {
+        position: 'absolute',
+        top: 50, // Adjust according to your design
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        borderRadius: 5,
+        elevation: 5, // Android shadow
+        shadowColor: '#000', // iOS shadow
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+        zIndex: 999, // Ensure it's above other elements
     }
+
 });
