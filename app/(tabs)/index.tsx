@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { AnimatedFAB, Searchbar, TextInput } from "react-native-paper";
+import { AnimatedFAB, Searchbar, TextInput, Switch  } from "react-native-paper";
 import { DatePickerModal } from "react-native-paper-dates";
 import { View, Text, StyleSheet, Modal, TouchableOpacity } from "react-native";
 
@@ -9,6 +9,8 @@ export default function Tab() {
     const [text, setText] = React.useState("");
     const [date, setDate] = useState<Date | undefined>(undefined);
     const [open, setOpen] = useState(false);
+    const [isSwitchOn, setIsSwitchOn] = React.useState(false);
+    const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
     return (
         <View style={styles.container}>
@@ -61,11 +63,22 @@ export default function Tab() {
                             />
 
                             <Text style={styles.label}>DATE AND TIME</Text>
-                            <TextInput
-                                value={text}
-                                style={styles.textInput}
-                                onChangeText={text => setText(text)}
-                            />
+                            <View style={styles.switchContainer}>
+                                <TextInput
+                                    value={"All Day"}
+                                    style={[styles.textInput, { flex: 1 }]}
+                                    editable={false}
+                                    right={
+                                        <TextInput.Icon
+                                            style={styles.switch}
+                                            icon={() => (
+                                                <Switch value={isSwitchOn} onValueChange={onToggleSwitch} />
+                                            )}
+                                        />
+                                    }
+                                />
+                            </View>
+
                             <TextInput
                                 value={date ? date.toDateString() : new Date().toDateString()}
                                 style={styles.textInput}
@@ -75,7 +88,6 @@ export default function Tab() {
                                 }}
                                 right={<TextInput.Icon icon="calendar" onPress={() => setOpen(true)} />}
                             />
-
                             <DatePickerModal
                                 locale="en"
                                 mode="single"
@@ -88,9 +100,8 @@ export default function Tab() {
                                 }}
                             />
 
-
                             <TextInput
-                                value={text}
+                                value={"00:00"}
                                 style={styles.textInput}
                                 onChangeText={text => setText(text)}
                             />
@@ -175,14 +186,23 @@ const styles = StyleSheet.create({
     textInput: {
         width: 366,
         height: 50,
-        borderRadius: 10,
-        borderTopLeftRadius: 10,
-        borderTopRightRadius: 10,
+        borderRadius: 5,
+        borderTopLeftRadius: 5,
+        borderTopRightRadius: 5,
     },
     label: {
         fontSize: 15,
         color: 'gray',
         marginBottom: 5,
         marginTop: 25,
+    },
+    switchContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        width: "110%",
+    },
+    switch: {
+        width: "300%"
     }
 });
