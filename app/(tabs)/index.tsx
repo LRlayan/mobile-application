@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import { AnimatedFAB, Searchbar, TextInput, Switch, Divider } from "react-native-paper";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import {View, Text, StyleSheet, Modal, TouchableOpacity, FlatList, ScrollView, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard } from "react-native";
-import CountdownCard from "../component/card";
+import CountdownCard from "../component/card/card";
 import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
@@ -56,6 +56,7 @@ export default function Tab() {
                 placeholder="Search"
                 onChangeText={setSearchQuery}
                 value={searchQuery}
+                style={{ marginBottom: 20 }}
             />
 
             <CountdownCard data={allCards}/>
