@@ -14,6 +14,7 @@ export type CountdownRootState = {
             repeat: string;
             color: string;
             notes: string;
+            selectedUnits: string[]
         }>
     }
 }
