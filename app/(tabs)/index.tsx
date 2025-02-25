@@ -36,7 +36,7 @@ export default function Tab() {
     const cards = useSelector((state: CountdownRootState) => state.countdown.countdowns) || [];
     const [allCards, setAllCards] = useState<CountdownModel[]>(cards);
     const [openUnits, setOpenUnits] = useState(false);
-    const [selectedUnits, setSelectedUnits] = useState(["Days", "Hours", "Minutes", "Seconds"]);
+    const [selectedUnits, setSelectedUnits] = useState<string[]>([]);
     const [items, setItems] = useState([
         { label: 'Years', value: 'Years' },
         { label: 'Months', value: 'Months' },
@@ -54,7 +54,7 @@ export default function Tab() {
     const handleSubmit = () => {
         if (!title || !date) return;
         const configDate = date ? date.toDateString() : new Date().toDateString();
-        const newCountdown = new CountdownModel(title,new Date(configDate),time,repeatText,colorsInput,notes);
+        const newCountdown = new CountdownModel(title,new Date(configDate),time,repeatText,colorsInput,notes,selectedUnits);
         dispatch(addCard(newCountdown));
         setModalVisible(false);
     }
