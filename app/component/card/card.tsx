@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, Text } from 'react-native-paper';
-import { CountdownModel } from '../model/countdown-model';
+import { CountdownModel } from '../../model/countdown-model';
 import {StyleSheet} from "react-native";
 
 interface CountdownCardProps {
