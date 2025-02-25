@@ -7,6 +7,7 @@ import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
 import {addCard, CountdownRootState} from "../reducer/countdownSlice";
+import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function Tab() {
     const [searchQuery, setSearchQuery] = React.useState('');
@@ -34,7 +35,17 @@ export default function Tab() {
     const dispatch = useDispatch<AppDispatch>();
     const cards = useSelector((state: CountdownRootState) => state.countdown.countdowns) || [];
     const [allCards, setAllCards] = useState<CountdownModel[]>(cards);
-
+    const [openUnits, setOpenUnits] = useState(false);
+    const [selectedUnits, setSelectedUnits] = useState(["Days", "Hours", "Minutes", "Seconds"]);
+    const [items, setItems] = useState([
+        { label: 'Years', value: 'Years' },
+        { label: 'Months', value: 'Months' },
+        { label: 'Weeks', value: 'Weeks' },
+        { label: 'Days', value: 'Days' },
+        { label: 'Hours', value: 'Hours' },
+        { label: 'Minutes', value: 'Minutes' },
+        { label: 'Seconds', value: 'Seconds' }
+    ]);
 
     useEffect(() => {
         setAllCards(cards);
@@ -274,6 +285,22 @@ export default function Tab() {
                                             style={styles.textInput}
                                             onChangeText={text => setNotes(text)}
                                         />
+                                        <View style={{ zIndex: 1000 }}>
+                                            <Text style={styles.label}>Select Units</Text>
+                                            <DropDownPicker
+                                                open={openUnits}
+                                                value={selectedUnits}
+                                                items={items}
+                                                setOpen={setOpenUnits}
+                                                setValue={setSelectedUnits}
+                                                setItems={setItems}
+                                                multiple={true}
+                                                min={1}
+                                                mode="BADGE"
+                                                placeholder="Select units"
+                                                style={styles.textInput}
+                                            />
+                                        </View>
                                     </View>
                                 </ScrollView>
                             </TouchableWithoutFeedback>
