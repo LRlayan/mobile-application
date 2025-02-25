@@ -2,6 +2,8 @@ import * as React from 'react';
 import { Card, Text } from 'react-native-paper';
 import { CountdownModel } from '../../model/countdown-model';
 import {StyleSheet, View} from "react-native";
+import {useEffect, useState} from "react";
+import * as timers from "node:timers";
 
 interface CountdownCardProps {
     data: CountdownModel[];
@@ -18,7 +20,13 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data }) => {
                         <View style={styles.unitsContainer}>
                             {item.selectedUnits.map((unit, unitIndex) => (
                                 <View key={unitIndex} style={styles.unit}>
-                                    <Text style={styles.unitText}>{unit}</Text>
+                                    {unit === "Seconds" ? <Text style={styles.unitText}>{unit && <CountdownTimer secondsVal={unit} />}</Text> : "Seconds"},
+                                    {unit === "Minutes" ? <Text style={styles.unitText}>{unit}</Text> : "Minutes"},
+                                    {unit === "Hours" ? <Text style={styles.unitText}>{unit}</Text> : "Hours"},
+                                    {unit === "Days" ? <Text style={styles.unitText}>{unit}</Text> : "Days"},
+                                    {unit === "Weeks" ? <Text style={styles.unitText}>{unit}</Text> : "Weeks"},
+                                    {unit === "Months" ? <Text style={styles.unitText}>{unit}</Text> : "Months"},
+                                    {unit === "Years" ? <Text style={styles.unitText}>{unit}</Text> : "Years"},
                                 </View>
                             ))}
                         </View>
@@ -26,6 +34,28 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data }) => {
                 </Card>
             ))}
         </>
+    );
+};
+
+interface CountdownTimerProps {
+    secondsVal:string;
+}
+
+const CountdownTimer: React.FC<CountdownTimerProps> = ({secondsVal}) => {
+    const [seconds, setSeconds] = useState<number>(new Date().getSeconds());
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setSeconds((prevSeconds) => (prevSeconds > 0 ? prevSeconds - 1 : 59));
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
+    return (
+        <View style={styles.timerContainer}>
+            <Text style={styles.unitText}>{`${secondsVal}\n${seconds}`}</Text>
+        </View>
     );
 };
 
@@ -56,6 +86,10 @@ const styles = StyleSheet.create({
     unitText: {
         color: '#333',
         textAlign: 'center',
+    },
+    timerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
     },
 });
 
