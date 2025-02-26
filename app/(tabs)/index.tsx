@@ -35,6 +35,7 @@ export default function HomeScreen() {
 
     const [title, setTitle] = React.useState("");
     const [notes, setNotes] = React.useState("");
+    const [modalType, setModalType] = useState("");
     const dispatch = useDispatch<AppDispatch>();
     const cards = useSelector((state: CountdownRootState) => state.countdown.countdowns) || [];
     const [allCards, setAllCards] = useState<CountdownModel[]>(cards);
@@ -87,6 +88,11 @@ export default function HomeScreen() {
         console.log("Hold text : ", hold, "card index : ",index);
     }
 
+    const handleFAB = () => {
+        setModalVisible(true);
+        setModalType("Add")
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Countdowns</Text>
@@ -131,6 +137,7 @@ export default function HomeScreen() {
                                             setHoldDropdownVisible(false);
 
                                             if (item === "Edit") {
+                                                setModalType("Edit");
                                                 handleUpdate();
                                             } else if (item === "Delete") {
                                                 handleDelete();
@@ -152,7 +159,7 @@ export default function HomeScreen() {
                 icon="plus"
                 label=""
                 extended={false}
-                onPress={() => setModalVisible(true)}
+                onPress={handleFAB}
                 animateFrom="right"
                 iconMode="static"
                 color='white'
@@ -173,7 +180,7 @@ export default function HomeScreen() {
                             <TouchableOpacity onPress={() => setModalVisible(false)}>
                                 <Text style={styles.cancelButton}>Cancel</Text>
                             </TouchableOpacity>
-                            <Text style={styles.modalTitle}>Add Countdown</Text>
+                            <Text style={styles.modalTitle}>{modalType} Countdown</Text>
                             <TouchableOpacity onPress={handleSubmit}>
                                 <Text style={styles.doneButton}>Done</Text>
                             </TouchableOpacity>
