@@ -32,6 +32,9 @@ const CountdownSlice = createSlice({
             if (index !== -1) {
                 state.countdowns[index] = action.payload;
             }
+        },
+        deleteCard: (state,action) => {
+            state.countdowns = state.countdowns.filter((c) => c.id !== action.payload);
         }
     },
     extraReducers: (builder) => {
@@ -39,5 +42,5 @@ const CountdownSlice = createSlice({
     }
 });
 
-export const {addCard,updateCard} = CountdownSlice.actions;
+export const {addCard,updateCard,deleteCard} = CountdownSlice.actions;
 export default CountdownSlice.reducer;
