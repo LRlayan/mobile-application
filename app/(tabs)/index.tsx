@@ -6,7 +6,7 @@ import CountdownCard from "../component/card/card";
 import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
-import {addCard, CountdownRootState, deleteCard, updateCard} from "../reducer/countdownSlice";
+import {saveCard, CountdownRootState } from "../reducer/countdownSlice";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function HomeScreen() {
@@ -76,7 +76,7 @@ export default function HomeScreen() {
         const configDate = date ? date.toDateString() : new Date().toDateString();
         const id = generateId();
         const newCountdown = new CountdownModel(id,title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
-        dispatch(addCard(newCountdown));
+        dispatch(saveCard(newCountdown));
     }
 
     const handleUpdate = () => {
@@ -86,11 +86,11 @@ export default function HomeScreen() {
         const configDate = date ? date.toDateString() : new Date().toDateString();
         const id = generateId();
         const updateCardData = new CountdownModel(id,title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
-        dispatch(updateCard(updateCardData));
+        // dispatch(updateCard(updateCardData));
     }
 
     const handleDelete = () => {
-        dispatch(deleteCard(id));
+        // dispatch(deleteCard(id));
     }
 
     const handleShare = () => {
