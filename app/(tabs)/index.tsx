@@ -6,7 +6,7 @@ import CountdownCard from "../component/card/card";
 import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
-import {addCard, CountdownRootState, updateCard} from "../reducer/countdownSlice";
+import {addCard, CountdownRootState, deleteCard, updateCard} from "../reducer/countdownSlice";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function HomeScreen() {
@@ -33,6 +33,7 @@ export default function HomeScreen() {
         return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
     };
 
+    const [id, setId] = React.useState(0);
     const [title, setTitle] = React.useState("");
     const [notes, setNotes] = React.useState("");
     const [modalType, setModalType] = useState("");
@@ -58,7 +59,6 @@ export default function HomeScreen() {
     }, [cards]);
 
     const routesCrudFunctions = () => {
-        console.log(modalType)
         if (modalType === "Add") {
             handleSubmit();
             setModalVisible(false);
@@ -90,7 +90,7 @@ export default function HomeScreen() {
     }
 
     const handleDelete = () => {
-        console.log("Delete Card");
+        dispatch(deleteCard(id));
     }
 
     const handleShare = () => {
@@ -99,6 +99,7 @@ export default function HomeScreen() {
 
     const holding = (index: number) => {
         setHoldDropdownVisible(true)
+        setId(index+1);
     }
 
     const handleFAB = () => {
