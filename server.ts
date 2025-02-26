@@ -12,6 +12,6 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-app.use('/countdown',CountdownsRoutes);
+app.use('/api/v1/countdown',CountdownsRoutes);
 
 app.listen(3002, () => console.log("Server start 3002 port"));
