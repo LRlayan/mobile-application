@@ -21,10 +21,13 @@ export default function HomeScreen() {
     const [repeatText, setRepeatText] = useState("Every Day");
     const [isColorDropdownVisible, setColorDropdownVisible] = useState(false);
     const [colorsInput, setColorInput] = useState("white");
+    const [isHoldDropdownVisible, setHoldDropdownVisible] = useState(false);
+    const [hold, setHold] = useState("");
     const onToggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
     const colorsOptions = ["red", "green", "white", "yellow", "black"];
     const repeatOptions = ["Every Day", "Every Week", "Every 2 Weeks", "Every Month", "Every Year"];
+    const holdOptions = ["Edit", "Delete", "Share"];
 
     const formatTime = (hours: number, minutes: number) => {
         return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
@@ -66,6 +69,15 @@ export default function HomeScreen() {
         setModalVisible(false);
     }
 
+    useEffect(() => {
+        console.log("Hold view : ", hold)
+    }, [hold]);
+
+    const holding = (index: number) => {
+        setHoldDropdownVisible(true)
+        console.log("Hold text : ", hold, "card index : ",index);
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Countdowns</Text>
@@ -82,10 +94,42 @@ export default function HomeScreen() {
                 keyboardShouldPersistTaps="handled"
             >
                 {allCards.map((card, index) => (
-                    <CountdownCard key={index} data={[card]} />
+                    <CountdownCard key={index} data={[card]} onHold={() => holding(index)}/>
                 ))}
             </ScrollView>
 
+            {isHoldDropdownVisible && (
+                <Modal
+                    transparent={true}
+                    animationType="fade"
+                    visible={isHoldDropdownVisible}
+                    onRequestClose={() => setHoldDropdownVisible(false)}
+                >
+                    <TouchableOpacity
+                        style={styles.modalOverlay}
+                        activeOpacity={1}
+                        onPress={() => setHoldDropdownVisible(false)}
+                    >
+                        <View style={styles.dropdownContainer}>
+                            <FlatList
+                                data={holdOptions}
+                                keyExtractor={(item) => item}
+                                renderItem={({ item }) => (
+                                    <TouchableOpacity
+                                        style={styles.optionItem}
+                                        onPress={() => {
+                                            setHold(item);
+                                            setHoldDropdownVisible(false);
+                                        }}
+                                    >
+                                        <Text style={styles.optionText}>{item}</Text>
+                                    </TouchableOpacity>
+                                )}
+                            />
+                        </View>
+                    </TouchableOpacity>
+                </Modal>
+            )}
 
             <AnimatedFAB
                 icon="plus"
