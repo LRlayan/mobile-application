@@ -1,5 +1,6 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import {CountdownModel} from "../model/countdown-model";
+import {api} from "../api/api";
 
 const initialState: {countdowns: CountdownModel[]} = {
     countdowns: [],
@@ -14,33 +15,53 @@ export type CountdownRootState = {
             time: { hours: number; minutes: number } | undefined;
             repeat: string;
             color: string;
-            notes: string;
+            note: string;
             selectedUnits: string[]
         }>
     }
-}
+};
+
+export const saveCard = createAsyncThunk(
+    'countdown/saveCard',
+    async (card: CountdownModel) => {
+        try {
+            const response = await api.post("countdown/saveCard", card);
+            return response.data;
+        } catch (e) {
+            console.error("Failed to save card!", e);
+            throw e;
+        }
+    }
+)
 
 const CountdownSlice = createSlice({
-    name: 'countdownSlice',
+    name: 'card',
     initialState,
     reducers: {
-        addCard: (state,action) => {
-            state.countdowns.push(action.payload);
-        },
-        updateCard: (state, action) => {
-            const index = state.countdowns.findIndex(c => c.id === action.payload.id);
-            if (index !== -1) {
-                state.countdowns[index] = action.payload;
-            }
-        },
-        deleteCard: (state,action) => {
-            state.countdowns = state.countdowns.filter((c) => c.id !== action.payload);
-        }
+        // updateCard: (state, action) => {
+        //     const index = state.countdowns.findIndex(c => c.id === action.payload.id);
+        //     if (index !== -1) {
+        //         state.countdowns[index] = action.payload;
+        //     }
+        // },
+        // deleteCard: (state,action) => {
+        //     state.countdowns = state.countdowns.filter((c) => c.id !== action.payload);
+        // }
     },
     extraReducers: (builder) => {
-
+        builder
+            .addCase(saveCard.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.countdowns = [...state.countdowns, action.payload]
+                }
+            })
+            .addCase(saveCard.pending, () => {
+                console.error("Pending save vehicle");
+            })
+            .addCase(saveCard.rejected, () => {
+                console.error("Rejected save vehicle");
+            })
     }
 });
 
-export const {addCard,updateCard,deleteCard} = CountdownSlice.actions;
 export default CountdownSlice.reducer;
