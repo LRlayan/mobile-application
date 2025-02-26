@@ -5,20 +5,20 @@ export class CountdownModel{
     time: { hours: number; minutes: number } | undefined;
     repeat: string;
     color: string;
-    notes: string;
+    note: string;
     selectedUnits: string[]
 
     constructor(id: number,title: string, date: Date, time: {
         hours: number;
         minutes: number
-    } | undefined, repeat: string, color: string, notes: string, selectedUnits: string[]) {
+    } | undefined, repeat: string, color: string, note: string, selectedUnits: string[]) {
         this.id = id;
         this.title = title;
         this.date = date;
         this.time = time;
         this.repeat = repeat;
         this.color = color;
-        this.notes = notes;
+        this.note = note;
         this.selectedUnits = selectedUnits;
     }
 }
