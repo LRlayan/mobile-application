@@ -8,6 +8,7 @@ const initialState: {countdowns: CountdownModel[]} = {
 export type CountdownRootState = {
     countdown: {
         countdowns: Array<{
+            id: number;
             title: string;
             date: Date;
             time: { hours: number; minutes: number } | undefined;
@@ -19,13 +20,18 @@ export type CountdownRootState = {
     }
 }
 
-
 const CountdownSlice = createSlice({
     name: 'countdownSlice',
     initialState,
     reducers: {
         addCard: (state,action) => {
             state.countdowns.push(action.payload);
+        },
+        updateCard: (state, action) => {
+            const index = state.countdowns.findIndex(c => c.id === action.payload.id);
+            if (index !== -1) {
+                state.countdowns[index] = action.payload;
+            }
         }
     },
     extraReducers: (builder) => {
@@ -33,5 +39,5 @@ const CountdownSlice = createSlice({
     }
 });
 
-export const {addCard} = CountdownSlice.actions;
+export const {addCard,updateCard} = CountdownSlice.actions;
 export default CountdownSlice.reducer;
