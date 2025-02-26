@@ -76,8 +76,16 @@ export default function Tab() {
                 value={searchQuery}
                 style={{ marginBottom: 20 }}
             />
+            <ScrollView
+                style={{ flex: 1 }}
+                contentContainerStyle={{ paddingBottom: 50, padding:7 }}
+                keyboardShouldPersistTaps="handled"
+            >
+                {allCards.map((card, index) => (
+                    <CountdownCard key={index} data={[card]} />
+                ))}
+            </ScrollView>
 
-            <CountdownCard data={allCards}/>
 
             <AnimatedFAB
                 icon="plus"
