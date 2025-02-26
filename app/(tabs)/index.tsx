@@ -47,14 +47,21 @@ export default function Tab() {
         { label: 'Seconds', value: 'Seconds' }
     ]);
 
+    const unitOrder = ["Years", "Months", "Weeks", "Days", "Hours", "Minutes", "Seconds"];
+
     useEffect(() => {
         setAllCards(cards);
     }, [cards]);
 
     const handleSubmit = () => {
         if (!title || !date) return;
+
+        const sortedUnits = [...selectedUnits].sort(
+            (a, b) => unitOrder.indexOf(a) - unitOrder.indexOf(b)
+        );
+
         const configDate = date ? date.toDateString() : new Date().toDateString();
-        const newCountdown = new CountdownModel(title,new Date(configDate),time,repeatText,colorsInput,notes,selectedUnits);
+        const newCountdown = new CountdownModel(title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
         dispatch(addCard(newCountdown));
         setModalVisible(false);
     }
