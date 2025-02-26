@@ -1,4 +1,5 @@
 export class CountdownModel{
+    id: number;
     title: string;
     date: Date;
     time: { hours: number; minutes: number } | undefined;
@@ -7,10 +8,11 @@ export class CountdownModel{
     notes: string;
     selectedUnits: string[]
 
-    constructor(title: string, date: Date, time: {
+    constructor(id: number,title: string, date: Date, time: {
         hours: number;
         minutes: number
     } | undefined, repeat: string, color: string, notes: string, selectedUnits: string[]) {
+        this.id = id;
         this.title = title;
         this.date = date;
         this.time = time;
