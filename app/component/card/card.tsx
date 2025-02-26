@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Card, Text } from 'react-native-paper';
 import { CountdownModel } from '../../model/countdown-model';
 import {StyleSheet, View} from "react-native";
-import {useEffect, useState} from "react";
-import * as timers from "node:timers";
+import CountdownTimer from "../timer/timer";
 
 interface CountdownCardProps {
     data: CountdownModel[];
 }
 
 const CountdownCard: React.FC<CountdownCardProps> = ({ data }) => {
+    console.log("Data : ",data.map((unit) => unit.selectedUnits))
     return (
         <>
             {data.map((item: CountdownModel, index: number) => (
@@ -20,13 +20,48 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data }) => {
                         <View style={styles.unitsContainer}>
                             {item.selectedUnits.map((unit, unitIndex) => (
                                 <View key={unitIndex} style={styles.unit}>
-                                    {unit === "Seconds" ? <Text style={styles.unitText}>{unit && <CountdownTimer secondsVal={unit} />}</Text> : "Seconds"},
-                                    {unit === "Minutes" ? <Text style={styles.unitText}>{unit}</Text> : "Minutes"},
-                                    {unit === "Hours" ? <Text style={styles.unitText}>{unit}</Text> : "Hours"},
-                                    {unit === "Days" ? <Text style={styles.unitText}>{unit}</Text> : "Days"},
-                                    {unit === "Weeks" ? <Text style={styles.unitText}>{unit}</Text> : "Weeks"},
-                                    {unit === "Months" ? <Text style={styles.unitText}>{unit}</Text> : "Months"},
-                                    {unit === "Years" ? <Text style={styles.unitText}>{unit}</Text> : "Years"},
+                                    {unit === "Seconds" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Seconds" targetDate={item.date} />
+                                        </Text>
+                                    )}
+                                    {unit === "Minutes" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Minutes" targetDate={item.date} />
+                                        </Text>
+                                    )}
+                                    {unit === "Hours" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Hours" targetDate={item.date} />
+                                        </Text>
+                                    )}
+                                    {unit === "Days" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Days" targetDate={item.date} />
+                                        </Text>
+                                    )}
+                                    {unit === "Weeks" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Weeks" targetDate={item.date} />
+                                        </Text>
+                                    )}
+                                    {unit === "Months" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Months" targetDate={item.date} />
+                                        </Text>
+                                    )}
+                                    {unit === "Years" && (
+                                        <Text style={styles.unitText}>
+                                            {unit}{"\n"}
+                                            <CountdownTimer type="Years" targetDate={item.date} />
+                                        </Text>
+                                    )}
                                 </View>
                             ))}
                         </View>
@@ -34,28 +69,6 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data }) => {
                 </Card>
             ))}
         </>
-    );
-};
-
-interface CountdownTimerProps {
-    secondsVal:string;
-}
-
-const CountdownTimer: React.FC<CountdownTimerProps> = ({secondsVal}) => {
-    const [seconds, setSeconds] = useState<number>(new Date().getSeconds());
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setSeconds((prevSeconds) => (prevSeconds > 0 ? prevSeconds - 1 : 59));
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, []);
-
-    return (
-        <View style={styles.timerContainer}>
-            <Text style={styles.unitText}>{`${secondsVal}\n${seconds}`}</Text>
-        </View>
     );
 };
 
@@ -83,13 +96,13 @@ const styles = StyleSheet.create({
         maxWidth: '30%',
         alignItems: 'center',
     },
-    unitText: {
-        color: '#333',
-        textAlign: 'center',
-    },
     timerContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+    },
+    unitText: {
+        color: '#333',
+        textAlign: 'center',
     },
 });
 
