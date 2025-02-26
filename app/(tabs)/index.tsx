@@ -69,9 +69,18 @@ export default function HomeScreen() {
         setModalVisible(false);
     }
 
-    useEffect(() => {
-        console.log("Hold view : ", hold)
-    }, [hold]);
+    const handleUpdate = () => {
+        console.log("Edit card");
+        setModalVisible(true);
+    }
+
+    const handleDelete = () => {
+        console.log("Delete Card");
+    }
+
+    const handleShare = () => {
+        console.log("Share");
+    }
 
     const holding = (index: number) => {
         setHoldDropdownVisible(true)
@@ -120,6 +129,14 @@ export default function HomeScreen() {
                                         onPress={() => {
                                             setHold(item);
                                             setHoldDropdownVisible(false);
+
+                                            if (item === "Edit") {
+                                                handleUpdate();
+                                            } else if (item === "Delete") {
+                                                handleDelete();
+                                            } else if (item === "Share") {
+                                                handleShare();
+                                            }
                                         }}
                                     >
                                         <Text style={styles.optionText}>{item}</Text>
