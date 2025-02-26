@@ -61,7 +61,7 @@ export default function TabLayout() {
             )}
         >
             <Tab.Screen
-                name="Home"
+                name="home"
                 component={HomeScreen}
                 options={{
                     tabBarLabel: 'Home',
@@ -71,7 +71,7 @@ export default function TabLayout() {
                 }}
             />
             <Tab.Screen
-                name="Settings"
+                name="settings"
                 component={SettingsScreen}
                 options={{
                     tabBarLabel: 'Settings',
@@ -81,7 +81,7 @@ export default function TabLayout() {
                 }}
             />
             <Tab.Screen
-                name="More"
+                name="more"
                 component={MoreScreen}
                 options={{
                     tabBarLabel: 'More',
