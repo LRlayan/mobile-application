@@ -9,7 +9,7 @@ import {CountdownModel} from "../model/countdown-model";
 import {addCard, CountdownRootState} from "../reducer/countdownSlice";
 import DropDownPicker from 'react-native-dropdown-picker';
 
-export default function Tab() {
+export default function HomeScreen() {
     const [searchQuery, setSearchQuery] = React.useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [date, setDate] = useState<Date>();
@@ -331,6 +331,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
+        marginTop: 30
     },
     title: {
         fontSize: 35,

@@ -1,9 +1,11 @@
-import { View, Text, StyleSheet } from 'react-native';
+import React from "react";
+import { View, StyleSheet } from 'react-native';
+import { Text } from 'react-native-paper';
 
-export default function Tab() {
+export function SettingsScreen() {
     return (
         <View style={styles.container}>
-            <Text>Tab [Home|Settings]</Text>
+            <Text variant="headlineMedium">Settings!</Text>
         </View>
     );
 }
