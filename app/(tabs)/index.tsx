@@ -6,7 +6,7 @@ import CountdownCard from "../component/card/card";
 import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
-import {addCard, CountdownRootState} from "../reducer/countdownSlice";
+import {addCard, CountdownRootState, updateCard} from "../reducer/countdownSlice";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function HomeScreen() {
@@ -57,22 +57,36 @@ export default function HomeScreen() {
         setAllCards(cards);
     }, [cards]);
 
+    const routesCrudFunctions = () => {
+        console.log(modalType)
+        if (modalType === "Add") {
+            handleSubmit();
+            setModalVisible(false);
+        } else if (modalType === "Edit") {
+            handleUpdate();
+            setModalVisible(false);
+        } else if (modalType === "Delete") {
+            handleDelete();
+        }
+    }
+
     const handleSubmit = () => {
         if (!title || !date) return;
-
-        const sortedUnits = [...selectedUnits].sort(
-            (a, b) => unitOrder.indexOf(a) - unitOrder.indexOf(b)
-        );
-
+        const sortedUnits = sortOfArray();
         const configDate = date ? date.toDateString() : new Date().toDateString();
-        const newCountdown = new CountdownModel(title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
+        const id = generateId();
+        const newCountdown = new CountdownModel(id,title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
         dispatch(addCard(newCountdown));
-        setModalVisible(false);
     }
 
     const handleUpdate = () => {
-        console.log("Edit card");
         setModalVisible(true);
+        if (!title || !date) return;
+        const sortedUnits = sortOfArray();
+        const configDate = date ? date.toDateString() : new Date().toDateString();
+        const id = generateId();
+        const updateCardData = new CountdownModel(id,title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
+        dispatch(updateCard(updateCardData));
     }
 
     const handleDelete = () => {
@@ -85,12 +99,21 @@ export default function HomeScreen() {
 
     const holding = (index: number) => {
         setHoldDropdownVisible(true)
-        console.log("Hold text : ", hold, "card index : ",index);
     }
 
     const handleFAB = () => {
         setModalVisible(true);
         setModalType("Add")
+    }
+
+    const sortOfArray = () => {
+        return [...selectedUnits].sort(
+            (a, b) => unitOrder.indexOf(a) - unitOrder.indexOf(b)
+        );
+    }
+
+    const generateId = () => {
+        return cards.length === 0 ? 1 : cards.length + 1;
     }
 
     return (
@@ -181,7 +204,7 @@ export default function HomeScreen() {
                                 <Text style={styles.cancelButton}>Cancel</Text>
                             </TouchableOpacity>
                             <Text style={styles.modalTitle}>{modalType} Countdown</Text>
-                            <TouchableOpacity onPress={handleSubmit}>
+                            <TouchableOpacity onPress={routesCrudFunctions}>
                                 <Text style={styles.doneButton}>Done</Text>
                             </TouchableOpacity>
                         </View>
