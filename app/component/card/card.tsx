@@ -20,7 +20,7 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data, onHold}) => {
                     <Card key={index} style={{ marginBottom: 10 }}>
                         <Card.Content style={styles.container}>
                             <Text variant="titleLarge">{item.title}</Text>
-                            <Text variant="bodyMedium">{item.notes}</Text>
+                            <Text variant="bodyMedium">{item.note}</Text>
                             <View style={styles.unitsContainer}>
                                 {item.selectedUnits.map((unit, unitIndex) => (
                                     <View key={unitIndex} style={styles.unit}>
