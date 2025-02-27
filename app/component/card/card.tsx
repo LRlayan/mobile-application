@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         paddingTop: 5,
         paddingBottom: 5,
-        margin: 0.8,
+        margin: 0.5,
         flex: 1,
         maxWidth: '30%',
         alignItems: 'center',
