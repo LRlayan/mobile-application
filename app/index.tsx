@@ -36,7 +36,7 @@ export default function AuthScreen() {
         if (!isSignIn) {
             return dispatch(register(user));
         }
-        login(user)
+        dispatch(login(user));
 
         const token = await getToken();
         if (token) {
