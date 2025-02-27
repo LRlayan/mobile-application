@@ -35,6 +35,19 @@ export const saveCard = createAsyncThunk(
     }
 )
 
+export const deleteCard = createAsyncThunk(
+    'card/deleteCard',
+    async (id: number) => {
+        try {
+            const response = await api.delete(`countdown/deleteCard/${id}`);
+            return response.data;
+        } catch (e) {
+            console.error("Failed to delete card!", e);
+            throw e;
+        }
+    }
+)
+
 export const getAllCards = createAsyncThunk(
     'countdown/getAllCards',
     async () => {
@@ -74,6 +87,15 @@ const CountdownSlice = createSlice({
             })
             .addCase(saveCard.rejected, () => {
                 console.error("Rejected save vehicle");
+            })
+            .addCase(deleteCard.fulfilled, (state,action) => {
+                state.countdowns = state.countdowns.filter((c) => c.id !== action.meta.arg);
+            })
+            .addCase(deleteCard.pending, () => {
+                console.error("Pending delete card");
+            })
+            .addCase(deleteCard.rejected, () => {
+                console.error("Rejected delete card");
             })
             .addCase(getAllCards.fulfilled, (state, action) => {
                 state.countdowns = action.payload || [];

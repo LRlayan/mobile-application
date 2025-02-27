@@ -6,7 +6,7 @@ import CountdownCard from "../component/card/card";
 import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
-import {saveCard, CountdownRootState, getAllCards} from "../reducer/countdownSlice";
+import {saveCard, deleteCard, CountdownRootState, getAllCards} from "../reducer/countdownSlice";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function HomeScreen() {
@@ -95,7 +95,7 @@ export default function HomeScreen() {
     }
 
     const handleDelete = () => {
-        // dispatch(deleteCard(id));
+        dispatch(deleteCard(id));
     }
 
     const handleShare = () => {
