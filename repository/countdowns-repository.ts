@@ -14,11 +14,19 @@ export async function saveCard(card: CountdownsModel) {
                 repeat: card.repeat,
                 color: card.color,
                 note: card.note,
-                unit: card.selectedUnits
+                selectedUnits: card.selectedUnits
             }
         });
         return newCard;
     } catch (e) {
-        console.log("error save card ", e)
+        console.log("error save card ", e);
+    }
+}
+
+export async function getAllCards() {
+    try {
+        return await prisma.card.findMany();
+    } catch (e) {
+        console.log("error get all cards ", e);
     }
 }
