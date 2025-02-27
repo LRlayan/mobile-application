@@ -10,6 +10,15 @@ export async function saveCardService(card: CountdownsModel) {
     }
 }
 
+export async function deleteCardService(id: number) {
+    try {
+        return deleteCard(id);
+    } catch (e) {
+        console.error("Service layer error: Failed to delete cards!", e);
+        throw new Error("Failed to delete cards. Please try again.");
+    }
+}
+
 export async function getAllCardsService() {
     try {
          return await getAllCards();
