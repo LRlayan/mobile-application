@@ -14,12 +14,12 @@ datasource db {
 }
 
 model card {
-  id     Int      @id
-  title  String   @db.VarChar(255)
-  date   DateTime @db.Date
-  time   Json
-  repeat String   @db.VarChar(255)
-  color  String   @db.VarChar(255)
-  note   String   @db.VarChar(255)
-  unit   Json
+  id            Int      @id
+  title         String   @db.VarChar(255)
+  date          DateTime @db.Date
+  time          Json
+  repeat        String   @db.VarChar(255)
+  color         String   @db.VarChar(255)
+  note          String   @db.VarChar(255)
+  selectedUnits Json
 }
