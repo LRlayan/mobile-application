@@ -66,9 +66,11 @@ export default function HomeScreen() {
         if (modalType === "Add") {
             handleSubmit();
             setModalVisible(false);
+            resetForm();
         } else if (modalType === "Edit") {
             handleUpdate();
             setModalVisible(false);
+            resetForm();
         } else if (modalType === "Delete") {
             handleDelete();
         }
@@ -81,7 +83,6 @@ export default function HomeScreen() {
         const id = generateId();
         const newCountdown = new CountdownModel(id,title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
         dispatch(saveCard(newCountdown));
-        console.log("all cards :: ", allCards);
     }
 
     const handleUpdate = () => {
@@ -101,12 +102,20 @@ export default function HomeScreen() {
         console.log("Share");
     }
 
-    const holding = (index: number) => {
+    const holding = (index: number,card: CountdownModel) => {
+        resetForm();
+        setTitle(card.title);
+        setTime(card.time);
+        setRepeatText(card.title);
+        setColorInput(card.color);
+        setNotes(card.note);
+        setSelectedUnits(card.selectedUnits);
         setHoldDropdownVisible(true)
         setId(index+1);
     }
 
     const handleFAB = () => {
+        resetForm();
         setModalVisible(true);
         setModalType("Add")
     }
@@ -120,6 +129,18 @@ export default function HomeScreen() {
     const generateId = () => {
         return cards.length === 0 ? 1 : cards.length + 1;
     }
+
+    const resetForm = () => {
+        setDate(undefined);
+        setTime(undefined);
+        setRepeatText("Every Day");
+        setColorInput("white");
+        setId(0);
+        setTitle("");
+        setNotes("");
+        setSelectedUnits([]);
+    };
+
 
     return (
         <View style={styles.container}>
@@ -137,7 +158,7 @@ export default function HomeScreen() {
                 keyboardShouldPersistTaps="handled"
             >
                 {allCards.map((card, index) => (
-                    <CountdownCard key={index} data={[card]} onHold={() => holding(index)}/>
+                    <CountdownCard key={index} data={[card]} onHold={() => holding(index,card)}/>
                 ))}
             </ScrollView>
 
