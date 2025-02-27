@@ -1,6 +1,8 @@
 import express from "express";
 import dotenv from 'dotenv';
 import jwt, {Secret} from 'jsonwebtoken';
+import {UserModel} from "../model/user-model";
+import {saveUserService} from "../service/user-service";
 
 dotenv.config();
 
@@ -16,8 +18,13 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/register", async (req, res) => {
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    const user = new UserModel(username, email, password);
     try{
-
+        const registration = await saveUserService(user);
+        res.status(201).json(registration);
     }catch(err){
         console.log(err);
         res.status(401).json(err);
