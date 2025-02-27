@@ -16,6 +16,17 @@ CountdownsRoutes.post('/saveCard', async (req: express.Request, res: express.Res
     }
 });
 
+CountdownsRoutes.delete('/deleteCard/:id', async (req: express.Request, res:express.Response) => {
+    try {
+        const id = req.params.id;
+        const result = await deleteCardService(parseInt(id));
+        res.status(200).send(result);
+    } catch (e) {
+        console.log("Failed to delete card!", e);
+        res.status(400).send("Failed to delete card.");
+    }
+});
+
 CountdownsRoutes.get('/getAllCards', async (req: express.Request, res: express.Response) => {
     try {
         const getAllCards = await getAllCardsService();
