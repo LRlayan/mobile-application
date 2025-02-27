@@ -22,6 +22,25 @@ export async function saveCard(card: CountdownsModel) {
         console.log("error save card ", e);
     }
 }
+export async function updateCard(id: number, card: CountdownsModel) {
+    try {
+        const updatedCard = await prisma.card.update({
+            where: {id: id},
+            data: {
+                title: card.title,
+                date: card.date,
+                time: card.time,
+                repeat: card.repeat,
+                color: card.color,
+                note: card.note,
+                selectedUnits: card.selectedUnits
+            }
+        });
+        return updatedCard;
+    } catch (e) {
+        console.log("error update card ", e);
+    }
+}
 
 export async function deleteCard(id: number) {
     try {
