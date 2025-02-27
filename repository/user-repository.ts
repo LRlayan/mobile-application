@@ -22,7 +22,20 @@ export async function saveUser(user: { username: string; email: string; password
 
 export async function verifyUserCredentials( username: string, password: string ) {
     try {
+        const user = await prisma.user.findFirst({
+            where: {username: username}
+        });
 
+        if (!user) {
+            return false;
+        }
+
+        if (!user.password) {
+            throw new Error("User password not found.");
+        }
+
+        const passwordMatch = await bcrypt.compare(password, user.password);
+        return passwordMatch;
     } catch (error) {
         console.error("Error verifying user credentials:", error);
         throw error;
