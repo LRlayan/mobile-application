@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { Text, Avatar, List } from "react-native-paper";
+import { Text, Avatar, List, Switch } from "react-native-paper";
+import { router } from "expo-router";
 
 export function SettingsScreen() {
+    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isShowDates, setIsShowDates] = useState(true);
+
+    const handleLogout = () => {
+        router.replace("/"); // Redirect to login page
+    };
+
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, isDarkMode ? styles.darkContainer : {}]}>
             {/* Header with Avatar */}
             <View style={styles.header}>
-                <Text variant="headlineMedium">Settings</Text>
+                <Text variant="headlineMedium" style={isDarkMode ? styles.darkText : {}}>Settings</Text>
                 <TouchableOpacity onPress={() => console.log("Avatar Pressed")}>
                     <Avatar.Icon size={40} icon="account-circle" />
                 </TouchableOpacity>
@@ -33,10 +41,38 @@ export function SettingsScreen() {
                     left={(props) => <List.Icon {...props} icon="lock" />}
                     onPress={() => console.log("Privacy Pressed")}
                 />
+
+                {/* Dark Mode Toggle */}
+                <List.Item
+                    title="Dark Mode"
+                    description="Enable dark theme"
+                    left={(props) => <List.Icon {...props} icon="theme-light-dark" />}
+                    right={() => (
+                        <Switch value={isDarkMode} onValueChange={() => setIsDarkMode(!isDarkMode)} />
+                    )}
+                />
+
+                {/* Archive */}
+                <List.Item
+                    title="Archive"
+                    description="View archived items"
+                    left={(props) => <List.Icon {...props} icon="archive" />}
+                    onPress={() => console.log("Archive Pressed")}
+                />
+
+                {/* Show Dates Toggle */}
+                <List.Item
+                    title="Show Dates"
+                    description="Display item dates"
+                    left={(props) => <List.Icon {...props} icon="calendar" />}
+                    right={() => (
+                        <Switch value={isShowDates} onValueChange={() => setIsShowDates(!isShowDates)} />
+                    )}
+                />
             </View>
 
             {/* Logout Button */}
-            <TouchableOpacity style={styles.logoutButton} onPress={() => console.log("Logout Pressed")}>
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
         </View>
@@ -49,6 +85,9 @@ const styles = StyleSheet.create({
         padding: 20,
         marginTop: 40,
         backgroundColor: "#fff",
+    },
+    darkContainer: {
+        backgroundColor: "#121212", // Dark mode background
     },
     header: {
         flexDirection: "row",
@@ -70,6 +109,9 @@ const styles = StyleSheet.create({
         color: "#fff",
         fontSize: 16,
         fontWeight: "bold",
+    },
+    darkText: {
+        color: "#fff",
     },
 });
 
