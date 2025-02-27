@@ -1,27 +1,46 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Button, Text, TextInput, Card } from "react-native-paper";
 import { useRouter } from "expo-router";
+import {UserModel} from "./model/user-model";
+import {AppDispatch} from "./store/store";
+import {useDispatch, useSelector} from "react-redux";
+import {register, UserRootState} from "./reducer/userSlice";
 
 export default function AuthScreen() {
     const router = useRouter();
     const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [isSignIn, setIsSignIn] = useState(true);
     const [error, setError] = useState("");
+    const dispatch = useDispatch<AppDispatch>();
+    const isAuthenticated = useSelector((state: UserRootState) => state.user.isAuthenticated);
 
-    const handleLogin = () => {
+    useEffect(() => {
+        if (isAuthenticated) {
+            router.replace("/(tabs)");
+        }
+    }, [isAuthenticated]);
+
+    const handleSignInAndSignUp = () => {
         if (!username || !password) {
             setError("Username and Password are required!");
             return;
         }
-        setError(""); // Clear errors
-        if (username === "ramesh" && password === "1234") {
-            router.replace("/(tabs)");
-        } else {
-            setError("Invalid username or password!");
+        setError("");
+
+        const newUser = new UserModel(username, email, password);
+        if (!isSignIn) {
+            return dispatch(register(newUser));
         }
+
+        // if (username === "ramesh" && password === "1234") {
+        //     router.replace("/(tabs)");
+        // } else {
+        //     setError("Invalid username or password!");
+        // }
     };
 
     return (
@@ -39,6 +58,16 @@ export default function AuthScreen() {
                         onChangeText={setUsername}
                         style={styles.input}
                     />
+
+                    {!isSignIn && (
+                        <TextInput
+                            label="Email"
+                            mode="outlined"
+                            value={email}
+                            onChangeText={setEmail}
+                            style={styles.input}
+                        />
+                    )}
 
                     <TextInput
                         label="Password"
@@ -64,7 +93,7 @@ export default function AuthScreen() {
                         />
                     )}
 
-                    <Button mode="contained" onPress={handleLogin} style={styles.button}>
+                    <Button mode="contained" onPress={handleSignInAndSignUp} style={styles.button}>
                         {isSignIn ? "Login" : "Sign Up"}
                     </Button>
 
