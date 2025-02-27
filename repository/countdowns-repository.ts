@@ -23,6 +23,17 @@ export async function saveCard(card: CountdownsModel) {
     }
 }
 
+export async function deleteCard(id: number) {
+    try {
+        const deleted = await prisma.card.delete({
+            where: {id: id}
+        });
+        return deleted;
+    } catch (e) {
+        console.log("error delete card ", e);
+    }
+}
+
 export async function getAllCards() {
     try {
         return await prisma.card.findMany();
