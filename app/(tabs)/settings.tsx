@@ -8,12 +8,11 @@ export function SettingsScreen() {
     const [isShowDates, setIsShowDates] = useState(true);
 
     const handleLogout = () => {
-        router.replace("/"); // Redirect to login page
+        router.replace("/");
     };
 
     return (
         <View style={[styles.container, isDarkMode ? styles.darkContainer : {}]}>
-            {/* Header with Avatar */}
             <View style={styles.header}>
                 <Text variant="headlineMedium" style={isDarkMode ? styles.darkText : {}}>Settings</Text>
                 <TouchableOpacity onPress={() => console.log("Avatar Pressed")}>
@@ -21,7 +20,6 @@ export function SettingsScreen() {
                 </TouchableOpacity>
             </View>
 
-            {/* Settings Options */}
             <View style={styles.settingsList}>
                 <List.Item
                     title="Account"
@@ -42,7 +40,6 @@ export function SettingsScreen() {
                     onPress={() => console.log("Privacy Pressed")}
                 />
 
-                {/* Dark Mode Toggle */}
                 <List.Item
                     title="Dark Mode"
                     description="Enable dark theme"
@@ -52,7 +49,6 @@ export function SettingsScreen() {
                     )}
                 />
 
-                {/* Archive */}
                 <List.Item
                     title="Archive"
                     description="View archived items"
@@ -60,7 +56,6 @@ export function SettingsScreen() {
                     onPress={() => console.log("Archive Pressed")}
                 />
 
-                {/* Show Dates Toggle */}
                 <List.Item
                     title="Show Dates"
                     description="Display item dates"
@@ -71,7 +66,6 @@ export function SettingsScreen() {
                 />
             </View>
 
-            {/* Logout Button */}
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
                 <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
@@ -87,7 +81,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     darkContainer: {
-        backgroundColor: "#121212", // Dark mode background
+        backgroundColor: "#121212",
     },
     header: {
         flexDirection: "row",
