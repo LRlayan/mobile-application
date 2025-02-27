@@ -23,12 +23,26 @@ export type CountdownRootState = {
 
 export const saveCard = createAsyncThunk(
     'countdown/saveCard',
-    async (card: CountdownModel) => {
+    async (card: CountdownModel, { dispatch }) => {
         try {
             const response = await api.post("countdown/saveCard", card);
+            dispatch(getAllCards());
             return response.data;
         } catch (e) {
             console.error("Failed to save card!", e);
+            throw e;
+        }
+    }
+)
+
+export const getAllCards = createAsyncThunk(
+    'countdown/getAllCards',
+    async () => {
+        try {
+            const response = await api.get('countdown/getAllCards');
+            return response.data;
+        } catch (e) {
+            console.error("Failed to get all cards!", e);
             throw e;
         }
     }
@@ -60,6 +74,15 @@ const CountdownSlice = createSlice({
             })
             .addCase(saveCard.rejected, () => {
                 console.error("Rejected save vehicle");
+            })
+            .addCase(getAllCards.fulfilled, (state, action) => {
+                state.countdowns = action.payload || [];
+            })
+            .addCase(getAllCards.pending, () => {
+                console.error("Pending get all cards");
+            })
+            .addCase(getAllCards.rejected, () => {
+                console.error("Rejected get all cards");
             })
     }
 });
