@@ -17,7 +17,7 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data, onHold}) => {
                     key={index}
                     onLongPress={onHold}
                 >
-                    <Card key={index} style={{ marginBottom: 10 }}>
+                    <Card key={index} style={{ marginBottom: 10, backgroundColor: item.color === "red" ? "#ed2424" : item.color === "yellow" ? "#c4be00" : item.color === "green" ? "#02a31f" : item.color === "blue" ? "#00a2fa" : "white" }}>
                         <Card.Content style={styles.container}>
                             <Text variant="titleLarge">{item.title}</Text>
                             <Text variant="bodyMedium">{item.note}</Text>
@@ -80,6 +80,7 @@ const CountdownCard: React.FC<CountdownCardProps> = ({ data, onHold}) => {
 const styles = StyleSheet.create({
     card: {
         marginBottom: 10,
+        backgroundColor: "#ffcccc"
     },
     container: {
         padding: 10,
