@@ -10,6 +10,15 @@ export async function saveCardService(card: CountdownsModel) {
     }
 }
 
+export async function updateCardService(id: number, card: CountdownsModel) {
+    try {
+        return await updateCard(id, card);
+    } catch (e) {
+        console.error("Service layer error: Failed to update cards!", e);
+        throw new Error("Failed to update cards. Please try again.");
+    }
+}
+
 export async function deleteCardService(id: number) {
     try {
         return deleteCard(id);
