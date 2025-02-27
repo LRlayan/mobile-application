@@ -111,7 +111,13 @@ export default function HomeScreen() {
         setNotes(card.note);
         setSelectedUnits(card.selectedUnits);
         setHoldDropdownVisible(true)
-        setId(index+1);
+        cards.map((c) => {
+            if (c.id === card.id) {
+                setId(c.id);
+            } else {
+                console.log("Id is not match");
+            }
+        });
     }
 
     const handleFAB = () => {
