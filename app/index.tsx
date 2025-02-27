@@ -5,7 +5,8 @@ import { useRouter } from "expo-router";
 import {UserModel} from "./model/user-model";
 import {AppDispatch} from "./store/store";
 import {useDispatch, useSelector} from "react-redux";
-import {register, UserRootState} from "./reducer/userSlice";
+import {login, register, UserRootState} from "./reducer/userSlice";
+import {getToken} from "./api/tokenService";
 
 export default function AuthScreen() {
     const router = useRouter();
@@ -16,31 +17,34 @@ export default function AuthScreen() {
     const [isSignIn, setIsSignIn] = useState(true);
     const [error, setError] = useState("");
     const dispatch = useDispatch<AppDispatch>();
-    const isAuthenticated = useSelector((state: UserRootState) => state.user.isAuthenticated);
+    let isAuthenticated = useSelector((state: UserRootState) => state.user.isAuthenticated);
 
     useEffect(() => {
         if (isAuthenticated) {
             router.replace("/(tabs)");
         }
-    }, [isAuthenticated]);
+    });
 
-    const handleSignInAndSignUp = () => {
+    const handleSignInAndSignUp = async () => {
         if (!username || !password) {
             setError("Username and Password are required!");
             return;
         }
         setError("");
 
-        const newUser = new UserModel(username, email, password);
+        const user = new UserModel(username, email, password);
         if (!isSignIn) {
-            return dispatch(register(newUser));
+            return dispatch(register(user));
         }
+        login(user)
 
-        // if (username === "ramesh" && password === "1234") {
-        //     router.replace("/(tabs)");
-        // } else {
-        //     setError("Invalid username or password!");
-        // }
+        const token = await getToken();
+        if (token) {
+            isAuthenticated = true;
+            router.replace("/(tabs)");
+        } else {
+            console.log("not token ")
+        }
     };
 
     return (
