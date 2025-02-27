@@ -27,6 +27,18 @@ CountdownsRoutes.delete('/deleteCard/:id', async (req: express.Request, res:expr
     }
 });
 
+CountdownsRoutes.put('/updateCard/:id', async (req: express.Request, res: express.Response) => {
+    try {
+        const id = req.params.id;
+        const card = req.body;
+        const result = await updateCardService(parseInt(id),card);
+        res.status(200).send(result);
+    } catch (e) {
+        console.log("Failed to update card!", e);
+        res.status(400).send("Failed to update card.");
+    }
+});
+
 CountdownsRoutes.get('/getAllCards', async (req: express.Request, res: express.Response) => {
     try {
         const getAllCards = await getAllCardsService();
