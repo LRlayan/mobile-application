@@ -154,7 +154,7 @@ export default function HomeScreen() {
             />
             <ScrollView
                 style={{ flex: 1 }}
-                contentContainerStyle={{ paddingBottom: 50, padding:7 }}
+                contentContainerStyle={{ paddingBottom: 50, padding:2 }}
                 keyboardShouldPersistTaps="handled"
             >
                 {allCards.map((card, index) => (
