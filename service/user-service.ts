@@ -1,5 +1,5 @@
 import {UserModel} from "../model/user-model";
-import {saveUser} from "../repository/user-repository";
+import {saveUser, verifyUserCredentials} from "../repository/user-repository";
 
 export async function saveUserService(user: UserModel) {
     try {
@@ -15,6 +15,7 @@ export async function verifyUserCredentialsService(username: string, password: s
         if (!username && !password) {
             console.error(`Please required username: ${username} and password: ${password}`);
         }
+        return verifyUserCredentials(username, password);
     } catch (e) {
         throw e;
     }
