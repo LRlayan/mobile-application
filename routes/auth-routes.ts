@@ -2,15 +2,26 @@ import express from "express";
 import dotenv from 'dotenv';
 import jwt, {Secret} from 'jsonwebtoken';
 import {UserModel} from "../model/user-model";
-import {saveUserService} from "../service/user-service";
+import {saveUserService, verifyUserCredentialsService} from "../service/user-service";
 
 dotenv.config();
 
 const router = express.Router();
 
 router.post("/login", async (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const user : UserModel = new UserModel(username, "", password);
     try{
+        const isVerified =  await verifyUserCredentialsService(username,password);
 
+        if(isVerified) {
+            const token = jwt.sign({username}, process.env.SECRET_KEY as Secret, {expiresIn: "50m"});
+            const refreshToken = jwt.sign({username}, process.env.REFRESH_TOKEN as Secret, {expiresIn: "50m"});
+            res.json({accessToken: token, refreshToken: refreshToken});
+        } else {
+            res.status(403).json({ message: "Invalid credentials" });
+        }
     }catch(err){
         console.log(err);
         res.status(400).send(err);
@@ -39,7 +50,7 @@ router.post("/refresh-token", async (req, res) => {
 
     try{
         const payload = jwt.verify(refresh_token as string, process.env.REFRESH_TOKEN as Secret) as {username: string, iat: number};
-        const token = jwt.sign({ username: payload.username }, process.env.SECRET_KEY as Secret, {expiresIn: "7d"});
+        const token = jwt.sign({ username: payload.username }, process.env.SECRET_KEY as Secret, {expiresIn: "50m"});
         res.json({accessToken : token});
     }catch(err){
         console.log(err);
