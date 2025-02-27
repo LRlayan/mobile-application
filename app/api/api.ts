@@ -1,7 +1,7 @@
 import axios, {AxiosError} from "axios";
 import {Button, notification} from "antd";
 import React from "react";
-import {getToken} from "./tokenService";
+import {getToken, removeToken, saveToken} from "./tokenService";
 
 export const api = axios.create({
     baseURL: "http://192.168.8.135:3000/api/v1"
@@ -42,7 +42,7 @@ api.interceptors.response.use((response) => response,
                         }
                     );
                     const newAccessToken = response.data.accessToken;
-                    localStorage.setItem("jwt_token", newAccessToken);
+                    saveToken(newAccessToken);
                     originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 
                     return api(originalRequest);
@@ -53,21 +53,18 @@ api.interceptors.response.use((response) => response,
 
                     if (!error.response) {
                         console.error("No response from server!");
-                        localStorage.removeItem("jwt_token");
-                        localStorage.removeItem("refresh_token");
+                        removeToken();
                         showSuccessNotification();
                         return;
                     }
 
                     if (error.response && (error.response.status === 401 || error.response.status === 403)) {
-                        localStorage.removeItem("jwt_token");
-                        localStorage.removeItem("refresh_token");
+                        removeToken();
                         showSuccessNotification();
                     }
                 }
             } else {
-                localStorage.removeItem("jwt_token");
-                localStorage.removeItem("refresh_token");
+                removeToken();
                 showSuccessNotification();
             }
         }

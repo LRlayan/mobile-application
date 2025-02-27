@@ -48,7 +48,6 @@ export const login = createAsyncThunk(
             const response = await api.post('auth/login', user, { withCredentials: true });
             return response.data;
         } catch (e) {
-            console.log("ERRR"+e)
             throw e;
         }
     }
@@ -77,8 +76,9 @@ const UserSlice = createSlice({
                     state.user = action.payload.user;
                     state.jwt_token = action.payload.accessToken;
                     state.refresh_token = action.payload.refreshToken;
+                    console.log("token ::: ", action.payload.accessToken);
                     saveToken(action.payload.accessToken);
-                    refreshToken(action.payload.refreshToken);
+                    refreshToken(action.payload.refreshToken)
                     state.username = action.payload.username;
                     state.isAuthenticated = true;
                 }
