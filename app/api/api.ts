@@ -1,15 +1,16 @@
 import axios, {AxiosError} from "axios";
 import {Button, notification} from "antd";
 import React from "react";
+import {getToken} from "./tokenService";
 
 export const api = axios.create({
-    baseURL: "http://localhost:3002/api/v1"
+    baseURL: "http://192.168.8.135:3000/api/v1"
 });
 
 api.interceptors.request.use(
-    (config: any) => {
+    async (config: any) => {
         if (!config.url?.includes("/auth")) {
-            const token = localStorage.getItem("jwt_token");
+            const token = await getToken();
             if (token) {
                 config.headers["Authorization"] = `Bearer ${token}`
             }
@@ -28,7 +29,7 @@ api.interceptors.response.use((response) => response,
         if (error.response.status === 401 && !originalRequest.isRetry) {
             originalRequest.isRetry = true;
 
-            const refreshToken = localStorage.getItem("refresh_token");
+            const refreshToken = await getToken();
             if (refreshToken) {
                 try {
                     const response: any = await api.post(
