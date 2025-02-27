@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
-import { Text, Avatar, List, Switch } from "react-native-paper";
+import {Text, Avatar, List, Switch, Divider} from "react-native-paper";
 import { router } from "expo-router";
 
 export function SettingsScreen() {
@@ -20,6 +20,8 @@ export function SettingsScreen() {
                 </TouchableOpacity>
             </View>
 
+            <Divider/>
+
             <View style={styles.settingsList}>
                 <List.Item
                     title="Account"
@@ -27,19 +29,21 @@ export function SettingsScreen() {
                     left={(props) => <List.Icon {...props} icon="account" />}
                     onPress={() => console.log("Account Pressed")}
                 />
+                <Divider/>
                 <List.Item
                     title="Notifications"
                     description="Manage notification preferences"
                     left={(props) => <List.Icon {...props} icon="bell" />}
                     onPress={() => console.log("Notifications Pressed")}
                 />
+                <Divider/>
                 <List.Item
                     title="Privacy"
                     description="Privacy settings"
                     left={(props) => <List.Icon {...props} icon="lock" />}
                     onPress={() => console.log("Privacy Pressed")}
                 />
-
+                <Divider/>
                 <List.Item
                     title="Dark Mode"
                     description="Enable dark theme"
@@ -48,14 +52,14 @@ export function SettingsScreen() {
                         <Switch value={isDarkMode} onValueChange={() => setIsDarkMode(!isDarkMode)} />
                     )}
                 />
-
+                <Divider/>
                 <List.Item
                     title="Archive"
                     description="View archived items"
                     left={(props) => <List.Icon {...props} icon="archive" />}
                     onPress={() => console.log("Archive Pressed")}
                 />
-
+                <Divider/>
                 <List.Item
                     title="Show Dates"
                     description="Display item dates"
@@ -64,6 +68,7 @@ export function SettingsScreen() {
                         <Switch value={isShowDates} onValueChange={() => setIsShowDates(!isShowDates)} />
                     )}
                 />
+                <Divider/>
             </View>
 
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
