@@ -62,6 +62,17 @@ export default function HomeScreen() {
         dispatch(getAllCards());
     }, [dispatch]);
 
+    useEffect(() => {
+        if (searchQuery.trim() === "") {
+            setAllCards(cards);
+        } else {
+            const filteredCards = cards.filter((card) =>
+                card.title.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setAllCards(filteredCards);
+        }
+    }, [searchQuery]);
+
     const routesCrudFunctions = () => {
         if (modalType === "Add") {
             handleSubmit();
