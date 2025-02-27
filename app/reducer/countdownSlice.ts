@@ -82,10 +82,10 @@ const CountdownSlice = createSlice({
                 }
             })
             .addCase(saveCard.pending, () => {
-                console.error("Pending save vehicle");
+                console.log("Pending save vehicle");
             })
             .addCase(saveCard.rejected, () => {
-                console.error("Rejected save vehicle");
+                console.log("Rejected save vehicle");
             })
             .addCase(updateCard.fulfilled, (state, action) => {
                 const updatedCard = action.payload;
@@ -95,28 +95,28 @@ const CountdownSlice = createSlice({
                 }
             })
             .addCase(updateCard.pending, () => {
-                console.error("Pending update card");
+                console.log("Pending update card");
             })
             .addCase(updateCard.rejected, () => {
-                console.error("Rejected update card");
+                console.log("Rejected update card");
             })
             .addCase(deleteCard.fulfilled, (state,action) => {
                 state.countdowns = state.countdowns.filter((c) => c.id !== action.meta.arg);
             })
             .addCase(deleteCard.pending, () => {
-                console.error("Pending delete card");
+                console.log("Pending delete card");
             })
             .addCase(deleteCard.rejected, () => {
-                console.error("Rejected delete card");
+                console.log("Rejected delete card");
             })
             .addCase(getAllCards.fulfilled, (state, action) => {
                 state.countdowns = action.payload || [];
             })
             .addCase(getAllCards.pending, () => {
-                console.error("Pending get all cards");
+                console.log("Pending get all cards");
             })
             .addCase(getAllCards.rejected, () => {
-                console.error("Rejected get all cards");
+                console.log("Rejected get all cards");
             })
     }
 });
