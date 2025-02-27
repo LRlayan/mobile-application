@@ -48,6 +48,15 @@ export const deleteCard = createAsyncThunk(
     }
 )
 
+export const updateCard = createAsyncThunk(
+    'card/updateCard',
+    async (card: CountdownModel, { dispatch }) => {
+        const response = await api.put(`countdown/updateCard/${card.id}`, card);
+        dispatch(getAllCards());
+        return response.data;
+    }
+)
+
 export const getAllCards = createAsyncThunk(
     'countdown/getAllCards',
     async () => {
@@ -64,17 +73,7 @@ export const getAllCards = createAsyncThunk(
 const CountdownSlice = createSlice({
     name: 'card',
     initialState,
-    reducers: {
-        // updateCard: (state, action) => {
-        //     const index = state.countdowns.findIndex(c => c.id === action.payload.id);
-        //     if (index !== -1) {
-        //         state.countdowns[index] = action.payload;
-        //     }
-        // },
-        // deleteCard: (state,action) => {
-        //     state.countdowns = state.countdowns.filter((c) => c.id !== action.payload);
-        // }
-    },
+    reducers: {},
     extraReducers: (builder) => {
         builder
             .addCase(saveCard.fulfilled, (state, action) => {
@@ -87,6 +86,19 @@ const CountdownSlice = createSlice({
             })
             .addCase(saveCard.rejected, () => {
                 console.error("Rejected save vehicle");
+            })
+            .addCase(updateCard.fulfilled, (state, action) => {
+                const updatedCard = action.payload;
+                const index = state.countdowns.findIndex((c) => c.id === updatedCard.id);
+                if (index !== -1) {
+                    state.countdowns[index] = action.payload;
+                }
+            })
+            .addCase(updateCard.pending, () => {
+                console.error("Pending update card");
+            })
+            .addCase(updateCard.rejected, () => {
+                console.error("Rejected update card");
             })
             .addCase(deleteCard.fulfilled, (state,action) => {
                 state.countdowns = state.countdowns.filter((c) => c.id !== action.meta.arg);
