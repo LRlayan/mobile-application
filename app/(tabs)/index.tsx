@@ -6,7 +6,7 @@ import CountdownCard from "../component/card/card";
 import {AppDispatch} from "../store/store";
 import {useDispatch, useSelector} from "react-redux";
 import {CountdownModel} from "../model/countdown-model";
-import {saveCard, CountdownRootState } from "../reducer/countdownSlice";
+import {saveCard, CountdownRootState, getAllCards} from "../reducer/countdownSlice";
 import DropDownPicker from 'react-native-dropdown-picker';
 
 export default function HomeScreen() {
@@ -58,6 +58,10 @@ export default function HomeScreen() {
         setAllCards(cards);
     }, [cards]);
 
+    useEffect(() => {
+        dispatch(getAllCards());
+    }, [dispatch]);
+
     const routesCrudFunctions = () => {
         if (modalType === "Add") {
             handleSubmit();
@@ -77,6 +81,7 @@ export default function HomeScreen() {
         const id = generateId();
         const newCountdown = new CountdownModel(id,title,new Date(configDate),time,repeatText,colorsInput,notes,sortedUnits);
         dispatch(saveCard(newCountdown));
+        console.log("all cards :: ", allCards);
     }
 
     const handleUpdate = () => {
