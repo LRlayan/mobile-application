@@ -1,6 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Platform} from "react-native";
+import {router} from "expo-router";
 
 export const saveToken = async (token: string) => {
     try {
@@ -46,4 +47,8 @@ export const removeToken = async () => {
     } catch (error) {
         console.error('Error removing token:', error);
     }
+};
+export const logout = async () => {
+    await AsyncStorage.removeItem("authToken"); // Clear stored session
+    router.replace("/");
 };
