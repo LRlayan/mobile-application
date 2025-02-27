@@ -18,7 +18,7 @@ router.post("/login", async (req, res) => {
         if(isVerified) {
             const token = jwt.sign({username}, process.env.SECRET_KEY as Secret, {expiresIn: "50m"});
             const refreshToken = jwt.sign({username}, process.env.REFRESH_TOKEN as Secret, {expiresIn: "50m"});
-            res.json({accessToken: token, refreshToken: refreshToken});
+            res.status(201).json({accessToken: token, refreshToken: refreshToken});
         } else {
             res.status(403).json({ message: "Invalid credentials" });
         }
