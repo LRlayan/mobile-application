@@ -1,6 +1,11 @@
 import {UserModel} from "../model/user-model";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {api} from "../api/api";
+import axios from "axios";
+import {refreshToken, saveToken} from "../api/tokenService";
+
+const api = axios.create({
+    baseURL: "http://192.168.8.135:3000/api/v1"
+});
 
 const initialState: { user: UserModel | null, jwt_token: null, refresh_token: null, username: null, isAuthenticated: boolean, loading: false, error: string } = {
     user: null,
@@ -36,6 +41,19 @@ export const register = createAsyncThunk(
     }
 );
 
+export const login = createAsyncThunk(
+    'auth/login',
+    async (user: UserModel) => {
+        try {
+            const response = await api.post('auth/login', user, { withCredentials: true });
+            return response.data;
+        } catch (e) {
+            console.log("ERRR"+e)
+            throw e;
+        }
+    }
+);
+
 const UserSlice = createSlice({
     name: "user",
     initialState,
@@ -49,11 +67,26 @@ const UserSlice = createSlice({
                 }
             })
             .addCase(register.pending, () => {
-                console.error("Pending register user");
+                console.log("Pending register user");
             })
             .addCase(register.rejected, () => {
-                console.error("Rejected register user");
+                console.log("Rejected register user");
             })
+            .addCase(login.fulfilled, (state, action) => {
+                if (action.payload) {
+                    state.user = action.payload.user;
+                    state.jwt_token = action.payload.accessToken;
+                    state.refresh_token = action.payload.refreshToken;
+                    saveToken(action.payload.accessToken);
+                    refreshToken(action.payload.refreshToken);
+                    state.username = action.payload.username;
+                    state.isAuthenticated = true;
+                }
+            })
+            .addCase(login.rejected, (state) => {
+                state.isAuthenticated = false;
+                console.error("Login failed");
+            });
     }
 });
 
